@@ -24,8 +24,6 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
-    private int total = 0;
-    private static final String TAG = "MyActivity";
     public void buttonOnClick(View v) {
 
         //Peronen mit Bezeichung und einem Prioritätsstatus werden erstellt( 1 > 2)
@@ -48,7 +46,7 @@ public class MainActivity extends ActionBarActivity {
         user.add(Person7);
 
         //Die Anzahl der Sitze wird eingelesen.
-        EditText Eingabe = (EditText) findViewById(R.id.editText2);
+        EditText Eingabe = (EditText) findViewById(R.id.editText);
         Integer AnzahlSitze = Integer.parseInt(Eingabe.getText().toString());
 
         String Ausgabe = "";
@@ -56,32 +54,27 @@ public class MainActivity extends ActionBarActivity {
         Integer AnzahlPersonen = user.size();
 
         //Erstellung der Ausgabe in Abhängigkeit der Anzahl der Sitze, Anzahl der Personen und deren Status
-        if(AnzahlSitze >= AnzahlPersonen){
-            for(User ausgabe : user){
-                //Ausgabe += ausgabe + "\n";
-                Ausgabe = "Es koennen alle mitfahren.";
-            }
-        }
-        else (AnzahlSitze < user.size()){
-            for(User ausgabe : user) {
+        if (AnzahlSitze >= AnzahlPersonen) {
+            Ausgabe = "Es koennen alle mitfahren.";
+        } else if (AnzahlSitze < AnzahlPersonen) {
+            for (User ausgabe : user) {
                 if (ausgabe.getStatus() >= 2) {
                     AnzahlStatus2 += 1;
                 }
             }
             if ((AnzahlPersonen - AnzahlStatus2) > AnzahlSitze) {
-                Ausgabe = "Es werden zusätzliche Autos benötigt.";
-            } if ((AnzahlPersonen - AnzahlStatus2) == AnzahlSitze) {
-                Ausgabe = "Es koennen nur Spieler mitfahren, aber keine Fans."
-            } else Ausgabe = "Es koenne alle Spieler aber nicht alle Fans mitfahren.";
+                Ausgabe = "Es werden zusaetzliche Sitzplaetze benoetigt.";
+            }else if ((AnzahlPersonen - AnzahlStatus2) == AnzahlSitze) {
+                Ausgabe = "Es koennen nur Spieler mitfahren, aber keine Fans.";
+            } else if ((AnzahlPersonen - (AnzahlStatus2 - 1)) == AnzahlSitze) {
+                Ausgabe = "Es koennen alle Spieler aber nicht alle Fans mitfahren.";
+            }
+
         }
         //Ausgabe
-        TextView myTextView=(TextView) findViewById(R.id.textView);
+        TextView myTextView = (TextView) findViewById(R.id.textView2);
         myTextView.setText(Ausgabe);
-
-
-
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
