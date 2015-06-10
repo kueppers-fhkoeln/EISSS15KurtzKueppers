@@ -1,0 +1,44 @@
+doctype html
+html
+    head
+        meta(charset='UTF-8')
+        title TeamDrive - Administrator Dashboard
+        link(rel='icon', href='/img/ico.ico')
+        link(rel='stylesheet', href='/css/admin.css', type='text/css')
+        script(src='/script/jade.js')
+        script(src='http://code.jquery.com/jquery-1.11.0.min.js')
+        
+    body
+        #header_content
+            .logo
+                a(href='/home/'+person._id)
+                    img(width='50', height='50', src='/img/LOGO1.png', alt='Logo')
+            .lname
+                h2 TeamDrive
+            .links
+                a.logout(href='/') Abmelden 
+                a.user= person.per_vorname+" "+person.per_name
+    
+            #heading
+                h2= person.per_mannschaft
+                h1 Administrationsseite
+            #content_wrapper
+                .content
+                    div(style='height:15px')
+                    .dashboard
+                        a(href='/home/'+person._id+'/players')
+                            img(src='/img/arrow.png')
+                            h2.headline Kader erstellen
+                            p.description Erstellen Sie den Kader der Mannschaft.
+                            p.description Diese müssen sich danach nicht mehr registrieren.
+                    div(style='height:3px')
+
+                    div(style='height:15px;')
+                    .dashboard
+                        a(href='/home/'+person._id+'/events')
+                            img(src='/img/arrow.png')
+                            h2.headline Ziele erstellen
+                            p.description Erstellen Sie Ziele zu den geplanten Events.
+                    div(style='height:3px')
+                                
+                                   

@@ -1,0 +1,54 @@
+doctype html
+html
+    head
+        meta(charset='UTF-8')
+        title= "TeamDrive - Eventsübersicht"
+        link(rel='icon', href='/img/ico.ico')
+        link(rel='stylesheet', href='/css/admin.css', type='text/css')
+        script(src='/script/jade.js')
+        script(src='/faye/client.js')
+        script(src='http://code.jquery.com/jquery-1.11.0.min.js')
+
+    body
+        #header_content
+            .logo
+                a(href='/home/'+person._id)
+                    img(width='50', height='50', src='/img/LOGO1.png', alt='Logo')
+            .lname
+                h2 TeamDrive
+            .links
+                a.logout(href='/') Abmelden 
+                a.user= person.per_vorname+" "+person.per_name
+    
+            #heading
+                h2= person.per_mannschaft
+                h1 Zielübersicht
+                
+                .box_content
+                    form#anlegen(method='get', action='/home/'+person._id+'/new_event')
+                        input#id(name='id', type='hidden', value=person._id)
+                        input.anlegen(value="Event hinzufügen", type="submit")
+                    fieldset
+                        table.eventverzeichnis
+                            thead
+                                th.col_name Eventname
+                                th.col_gegner Gegner
+                                th.col_strasse Straße
+                                th.col_stadt Stadt
+                                th.col_date Datum
+                                th.col_time Uhrzeit
+                                th.col_delete 
+                            tbody
+                                each event in events
+                                    tr.spieler-entry
+                                        td.col_name= event.e_eventname
+                                        td.col_gegner= event.e_gegner
+                                        td.col_strasse= event.e_strasse
+                                        td.col_stadt= event.e_stadt
+                                        td.col_date= event.e_datum
+                                        td.col_time= event.e_uhrzeit
+                                        td.col_delete
+                                            form#loeschen(method='post', action='/deleteEvent')
+                                                input#id(name='id', type='hidden', value=person._id)
+                                                input#name(name='event', type='hidden', value=event.e_eventname)
+                                                input.loeschen(value="Löschen", type="submit")
