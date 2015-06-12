@@ -51,6 +51,9 @@ var aktuellesDatum = datum.getDate()+"-"+(datum.getMonth()+1)+"-"+datum.getFullY
 var aktuelleUhrzeit = datum.getHours()+"-"+datum.getMinutes();
 //--------------------------------------------------------------------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------------------------------------------------------------------
+//---------------- Für die Website
+//--------------------------------------------------------------------------------------------------------------------------------------
 app.get('/', function(req, res){
     res.render('login');    
 });
@@ -204,6 +207,48 @@ app.post('/home/:id/new_event', function(req, res){
 app.get('*', function(req, res){ 
     res.render('404');
 });
+
+//--------------------------------------------------------------------------------------------------------------------------------------
+//---------------- Für die APP
+//--------------------------------------------------------------------------------------------------------------------------------------
+app.post('/login', function(req, res){
+    console.log("Seite wird aufgerufen!");
+    store.userLogin(req.body.benutzer, req.body.passwort, function(err, person){
+        if (!person){
+            res.status(400).send(err);
+        }else{
+            console.log("Android Nutzer angemeldet!");
+        }
+    });
+});
+app.post('/register', function(req, res){
+    var vorname= req.body.firstname;
+    var name= req.body.lastname;
+    
+    store.addNewPlayer({
+        per_mannschaft      : req.body.mannschaft,
+        per_vorname         : req.body.firstname,
+        per_name            : req.body.lastname,
+        per_tel             : req.body.tel,
+        per_mobil           : req.body.mobile,
+        per_email           : req.body.email,
+        per_status          : req.body.status,
+        per_strasse         : req.body.street,
+        per_stadt           : req.body.city,
+        per_auto            : req.body.auto,
+        per_sitzplaetze     : req.body.plaetze,
+        per_benutzer        : req.body.user,
+        per_pw              : req.body.pwd,
+    }, function(err){
+        if (err){
+            res.status(400).send(err);
+        }else{
+            console.log("Spieler: "+vorname+" "+name);
+            res.status(200);
+        }
+    });
+});
+
 
 //Start Server on Port
 server.listen(3000, function () {

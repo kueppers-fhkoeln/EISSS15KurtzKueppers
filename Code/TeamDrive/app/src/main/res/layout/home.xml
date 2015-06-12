@@ -1,0 +1,48 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="HomeActivity"
+    tools:ignore="MergeRootFrame" >
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="fill_vertical"
+        android:layout_marginTop="20pt"
+        android:gravity="center_horizontal"
+        android:text="Sie sind angemeldet."
+        android:textSize="25dip" />
+
+    <Button
+        android:id="@+id/fahrtMenue"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dip"
+        android:background="#e6e7e9"
+        android:onClick="fahrtMenue"
+        android:text="Fahrtmenü"
+        android:textColor="#000" />
+
+    <Button
+        android:id="@+id/fahrerMenue"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dip"
+        android:background="#e6e7e9"
+        android:onClick="fahrerMenue"
+        android:text="Fahrermenü"
+        android:textColor="#000" />
+
+    <Button
+        android:id="@+id/mitfahrerMenue"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dip"
+        android:background="#e6e7e9"
+        android:onClick="mitfahrerMenue"
+        android:text="Mitfahrermenü"
+        android:textColor="#000" />
+
+</FrameLayout>
