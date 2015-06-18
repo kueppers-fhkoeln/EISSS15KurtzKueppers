@@ -1,0 +1,22 @@
+{
+  "name": "teamdrive",
+  "version": "1.0.0",
+  "description": "npm install package.json für teamdrive",
+  "author": [{
+  "name": "Vsevolod Kueppers",
+  "name2": "Tim Kurtz"
+}],
+  "dependencies": {
+    "express": "*",
+    "body-parser": "*",
+    "faye": "*",
+    "http": "*",
+    "jade": "*",
+    "moment": "*",
+    "mongodb": "*",
+    "mongoose": "*",
+    "node": "*",
+    "password-hash": "*",
+    "nodemailer": "0.7.1"
+  }
+}

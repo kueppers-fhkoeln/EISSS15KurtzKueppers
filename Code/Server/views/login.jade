@@ -1,0 +1,29 @@
+doctype html
+html
+    head
+        meta(charset='UTF-8')
+        title TeamDrive - Login
+        link(rel='stylesheet', href='/css/login.css')
+        link(rel='icon', href='/img/ico.ico')
+        script(src='/script/jade.js')
+
+    body
+        .body
+        .header
+            div
+                | Team
+                span Drive
+                br
+        .login
+            form#login(method='post')
+                input#kennung-tf(type='text', placeholder='Benutzername', name='benutzer')
+                br
+                input#passwort-tf(type='password', placeholder='Passwort', name='passwort')
+                input(type='submit', value='Login')
+                br
+                a(href='#') Registrieren |
+                a(href='#')  Passwort vergessen
+
+
+
+

@@ -1,0 +1,80 @@
+doctype html
+html
+    head
+        meta(charset='UTF-8')
+        title= "TeamDrive - Spieler anlegen"
+        link(rel='icon', href='/img/ico.ico')
+        link(rel='stylesheet', href='/css/admin.css', type='text/css')
+        script(src='/script/jade.js')
+        script(src='/faye/client.js')
+        script(src='http://code.jquery.com/jquery-1.11.0.min.js')
+
+    body
+        #header_content
+            .logo
+                a(href='/home/'+person._id)
+                    img(width='50', height='50', src='/img/LOGO1.png', alt='Logo')
+            .lname
+                h2 TeamDrive
+            .links
+                a.logout(href='/') Abmelden 
+                a.user= person.per_vorname+" "+person.per_name
+    
+            #heading
+                h2= person.per_mannschaft
+                h1 Spieler hinzufügen
+                
+                .box_content
+                    fieldset
+                        form#new_mitarbeiter(method="post")
+                            #mannschaft-cg
+                                label(for='mannschaft-tf') Vereinsname
+                                input#mannschaft-tf(type='text', name='mannschaft', value=person.per_mannschaft, readonly)
+                            #firstname-cg
+                                label(for='firstname-tf') Vorname
+                                input#firstname-tf(type='text', name='firstname')
+                            #lastname-cg
+                                label(for='lastname-tf') Nachname
+                                input#lastname-tf(type='text', name='lastname')
+                            #tel-cg
+                                label(for='tel-tf') Telefon
+                                input#tel-tf(type='text', name='tel')
+                            #mobile-cg
+                                label(for='mobile-tf') Mobiltelefon
+                                input#mobile-tf(type='text', name='mobile')
+                            #email-cg
+                                label(for='email-tf') E-Mail
+                                input#email-tf(type='text', name='email')
+                            #status-cg
+                                label(for='status-tf') Mannschaftsstatus
+                                select#status-tf(name='status')
+                                    option(value='', selected='') Bitte auswählen
+                                    option(value='Administrator') Administrator
+                                    option(value='Betreuer') Betreuer
+                                    option(value='Spieler') Spieler
+                                    option(value='Fan') Fan
+                            #street-cg
+                                label(for='street-tf') Straße
+                                input#street-tf(type='text', name='street')
+                            #city-cg
+                                label(for='city-tf') Stadt
+                                input#city-tf(type='text', name='city')
+                            #auto-cg
+                                label(for='auto-tf') Auto
+                                select#auto-tf(name='auto')
+                                    option(value='', selected='') Bitte auswählen
+                                    option(value='Ja') Ja
+                                    option(value='Nein') Nein
+                            #plaetze-cg
+                                label(for='plaetze-tf') Sitzplätze
+                                input#plaetze-tf(type='number', name='plaetze')
+                            hr
+                            #user-cg
+                                label(for='user-tf') Benutzername
+                                input#user-tf(type='text', name='user')
+                            #pwd-cg
+                                label(for='pwd-tf') Passwort
+                                input#pwd-tf(type='password', name='pwd')
+                            hr
+                            input.half_bButton(type='submit', value='Spieler anlegen')
+                            input.half_rButton(type='reset', value='Löschen')
