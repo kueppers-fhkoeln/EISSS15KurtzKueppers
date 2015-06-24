@@ -11,6 +11,7 @@ var server = http.createServer(app);
 
 // Verlinkung der Datenbank
 var store = require('./store.js');
+var fill = require('./fill.js'); // zum Testen bei app.get('/home/:id/events', function(req, res){ (ist immoment auskommentiert)
 
 // Nodeadapter konfigurieren
 // Nodeadapter zu http-Server hinzufügen
@@ -172,7 +173,8 @@ app.get('/home/:id/events', function(req, res){
                 if(err) {
                     res.writeHead(500, "Es ist ein Fehler aufgetreten");
                 }else{
-                    res.render('events', {person:person, events:events});    
+                    res.render('events', {person:person, events:events}); 
+                   // fill.Zuteilung(events[0]._id, function(err, driver){});
                 }
             });
         }
