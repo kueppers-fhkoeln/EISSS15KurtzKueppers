@@ -1,13 +1,36 @@
 // Benötigte Module
 var express = require('express');
+<<<<<<< HEAD
 var app = express();
+=======
+var faye = require('faye');
+>>>>>>> origin/master
 var http = require('http');
 var bodyParser = require('body-parser');
 var nodemailer = require("nodemailer");
 var moment = require("moment");
+<<<<<<< HEAD
+=======
+// Express und Server
+var app = express();
+var server = http.createServer(app);
+>>>>>>> origin/master
 
 // Verlinkung der Datenbankabfragen
 var store = require('./store.js');
+var fill = require('./fill.js'); //testweise app.get('/home/:id/events')
+
+
+// Nodeadapter konfigurieren
+// Nodeadapter zu http-Server hinzufügen
+//PubSub-Client erzeugen
+var bayeux = new faye.NodeAdapter({
+	mount: '/faye',
+	timeout: 45
+});
+
+bayeux.attach(server);
+var pubClient = bayeux.getClient();
 
 // Variablen für den Server werden gesetzt
 var port = 3000;
@@ -170,13 +193,18 @@ app.get('/home/:id/events', function(req, res){
         if (!person){
             res.status(400).send(err);
         }else{
+<<<<<<< HEAD
             // Aufruf der Funktion getAllEvents mit "mannschaftsnamen"
             // Rückgabewert ist ein Array mit allen Events, die der Mannschaft zugeordnet sind
+=======
+            
+>>>>>>> origin/master
             store.getAllEvents(person.per_mannschaft, function(err, events){
                 if(err) {
                     res.writeHead(500, "Es ist ein Fehler aufgetreten");
                 }else{
-                    res.render('events', {person:person, events:events});    
+                    res.render('events', {person:person, events:events});
+                    fill.Zuteilung("FC Gummersbach", function(err, driver){}); 
                 }
             });
         }
@@ -231,8 +259,11 @@ app.post('/home/:id/new_event', function(req, res){
         }
     });
 });
+<<<<<<< HEAD
 
 // Gibt es die geforderte Ressource nicht, so kommt eine 404-Seite zurück
+=======
+>>>>>>> origin/master
 app.get('*', function(req, res){ 
     res.render('404');
 });
@@ -280,9 +311,6 @@ app.post('/register', function(req, res){
     // Setzen der Variablen für spätere Verwendung
     var vorname= req.body.vorname;
     var name= req.body.nachname;
-    var email= req.body.email;
-    var benutzer= req.body.benutzer;
-    var pw= req.body.passwort;
 
     // Daten als JSON an die Applikation setzen
     res.setHeader('Content-Type', 'application/json');
@@ -344,8 +372,8 @@ app.post('/fahrtauswahl', function(req, res){
     res.setHeader('Content-Type', 'application/json');
     // Aufruf der Funktion savePlayerStatus mit gefülltem Array und einem status
     store.savePlayerStatus({
-        p_id     : req.body.p_id,
-        e_id     : req.body.e_id
+        pid     : req.body.p_id,
+        eid     : req.body.e_id,
     }, req.body.status, function(err){
         if (err){
             res.status(400).send(JSON.stringify({ "state": 0, "message" : err }));
@@ -375,9 +403,9 @@ app.post('/sendMessage', function(req, res){
     res.setHeader('Content-Type', 'application/json');
     // Aufruf der Funktion saveMessage mit gefülltem Array
     store.saveMessage({
-        f_id     : req.body.f_id,
-        m_id     : req.body.p_id,
-        e_id     : req.body.e_id,
+        fid     : req.body.f_id,
+        mid     : req.body.p_id,
+        eid     : req.body.e_id,
         msg     : req.body.msg
     }, function(err){
         if (err){
@@ -387,6 +415,7 @@ app.post('/sendMessage', function(req, res){
         }
     });  
 });
+<<<<<<< HEAD
 app.post('/getMessage', function(req, res){
     // Daten als JSON an die Applikation setzen
     res.setHeader('Content-Type', 'application/json');
@@ -411,6 +440,8 @@ app.post('/getMessage', function(req, res){
         }
     });  
 });
+=======
+>>>>>>> origin/master
 app.post('/sendGPS', function(req, res){
     // Daten als JSON an die Applikation setzen
     res.setHeader('Content-Type', 'application/json');
@@ -428,6 +459,7 @@ app.post('/sendGPS', function(req, res){
         }
     });  
 });
+<<<<<<< HEAD
 app.post('/getMitfahrer', function(req, res){
     // Daten als JSON an die Applikation setzen
     res.setHeader('Content-Type', 'application/json');
@@ -457,6 +489,19 @@ app.post('/getMitfahrer', function(req, res){
                     });
                 }
             });
+=======
+app.post('/auto', function(req, res){
+    res.setHeader('Content-Type', 'application/json');
+    store.auto({
+        fid          : req.body.f_id,
+        mid          : req.body.m_id,
+        eid          : req.body.e_id
+    }, function(err){
+        if (err){
+            res.status(400).send(JSON.stringify({ "state": 0, "message" : err }));
+        }else{
+            res.status(200).send(JSON.stringify({ "state": 1, "message" : "erfolgreich" }));
+>>>>>>> origin/master
         }
     });  
 });
@@ -481,9 +526,14 @@ app.post('/abfahrtzeitpunkt', function(req, res){
                         if (err){
                             res.status(400).send(JSON.stringify({ "state": 0, "message" : err }));
                         }else{
+<<<<<<< HEAD
                             // Berechnung des Abfahrtzeitpunkts für den Fahrer (mit Puffer)
+=======
+                            //var b = moment(time, "mm");
+>>>>>>> origin/master
                             var abfahrt = moment(treffpunkt, "hh:mm").subtract(moment(time, "mm")).subtract(20, 'minute').format("hh:mm");
-                            res.status(200).send(JSON.stringify({ "state": 1, abfahrt:abfahrt, treffpunkt:treffpunkt }));
+                            //c = moment(c, "hh:mm");
+                            res.status(200).send(JSON.stringify({ "state": 1, abfahrt:abfahrt}));
                         }
                     });
                 }
@@ -493,7 +543,14 @@ app.post('/abfahrtzeitpunkt', function(req, res){
 });
 
 
+<<<<<<< HEAD
 //Starte Server mit der Portvariable
 server.listen(port, function () {
 	console.log('Der Server wurde mit dem Port '+port+' gestartet.');
 });
+=======
+//Start Server on Port
+server.listen(3000, function () {
+	console.log('Der Server wurde mit dem Port 3000 gestartet.');
+});
+>>>>>>> origin/master
