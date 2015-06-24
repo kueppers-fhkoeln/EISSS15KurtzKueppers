@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
-var crypto 	= require('crypto');
 var passwordHash = require('password-hash');
 var distance = require('google-distance');
 
@@ -60,6 +59,7 @@ var autoSchema = {
 var nachrichtSchema = {
     f_id: ObjectId,
     m_id: ObjectId,
+    e_id: ObjectId,
     msg: String
 };
 
@@ -78,13 +78,13 @@ var store = {
         var hashedPassword = passwordHash.generate(pass);
         Person.findOne({per_benutzer: user}, function(err, users) {
             if (users == null || users.per_benutzer != user){
-                callback('Benutzer-nicht-gefunden');
+                callback('Benutzer nicht gefunden!');
             }else{
                 var validate = passwordHash.verify(users.per_pw, hashedPassword);
                 if (validate == true){
                     callback(null, users);
                 }else{
-                    callback('ungültiges-Passwort');
+                    callback('Das Passwort ist ungültig!');
                 }
             }
         });
@@ -93,7 +93,7 @@ var store = {
         var pid = (id);
         Person.findById(pid, function(err, users) {
             if (users == null || users._id != pid){
-                callback('ID-nicht-gefunden');
+                callback('User ID wurde nicht gefunden!');
             }else{
                 callback(null, users);
             }
@@ -111,7 +111,7 @@ var store = {
     addNewPlayer: function(per_data, callback) {
         Person.findOne({per_benutzer:per_data.per_benutzer}, function(err, users) {
             if (users){
-                callback('Benutzername-schon-verwendet');
+                callback('Benutzername wurde schon verwendet!');
             }else{
                 Person.create(per_data, callback);
             }
@@ -131,13 +131,12 @@ var store = {
     },
     getComingEvent: function(id, callback) {
         Person.findById(id, function(err, player){
-            console.log(player._id);
             if (player == null && player._id != id){
-                callback('Spieler nicht gefunden');
+                callback('Spieler ID wurde nicht gefunden!');
             }else{
                 Event.findOne({e_mannschaft:player.per_mannschaft}).where('e_datum').gt(yesterday).sort({'e_datum': 1}).sort({'e_uhrzeit': 1}).limit(1).exec(function(err, event) {
                     if (event == null && player.per_mannschaft != event.e_mannschaft){
-                        callback('Event nicht gefunden');
+                        callback('Kein passendes Event gefunden!');
                     }else{
                         callback(null, event)
                     }
@@ -145,30 +144,31 @@ var store = {
             } 
         });
     },
-    savePlayerStatus: function(fm_data, status, callback) {
-        if (fm_data == null &&  status == null){
+    savePlayerStatus: function(data, status, callback) {
+        var tf = data == null &&  status == null;
+        if (tf = false){
                callback('Ohne Daten, kein Fahrer-/ Mitfahrereintrag möglich!');
         }else if (status == "true"){
-            Fahrer.findOne({p_id:fm_data.pid}, {e_id:fm_data.eid}, function(err, eintrag){
-                if (eintrag == null) Fahrer.create(fm_data, callback);
-                else callback('Spieler bereits als Fahrer eingetragen!');
+            Fahrer.findOne({p_id:data.p_id, e_id:data.e_id}, function(err, eintrag){
+                if (eintrag == null) Fahrer.create(data, callback);
+                else callback('Spieler ist bereits als Fahrer eingetragen!');
             });
         }else{
-            Mitfahrer.findOne({p_id:fm_data.pid}, {e_id:fm_data.eid}, function(err, eintrag){
-                if (eintrag == null) Mitfahrer.create(fm_data, callback);
-                else callback('Spieler bereits als Mitfahrer eingetragen!');
+            Mitfahrer.findOne({p_id:data.p_id, e_id:data.e_id}, function(err, eintrag){
+                if (eintrag == null) Mitfahrer.create(data, callback);
+                else callback('Spieler ist bereits als Mitfahrer eingetragen!');
             });
         }
     },
-    getEventDriver: function(m_data, callback) {
-        if (m_data == null){
+    getEventDriver: function(data, callback) {
+        if (data == null){
                callback('Ohne Mitfahrer und Event ID ist keine Fahrerermittlung möglich!');
         }else{
-            Auto.findOne({m_id:m_data.mid, e_id:m_data.eid}, function(err, driver){
+            Auto.findOne({m_id:data.mid, e_id:data.eid}, function(err, driver){
                 if (driver != null){
-                    Person.findOne(driver.fid, function(err, user) {
-                        if (user == null || driver.fid == user._id){
-                            callback('ID-nicht-gefunden');
+                    Person.findOne(driver.f_id, function(err, user) {
+                        if (user == null || driver.f_id == user._id){
+                            callback('Benutzer ID wurde nicht gefunden!');
                         }else{
                             var fahrer = ({
                                 f_id : user._id,
@@ -181,38 +181,118 @@ var store = {
             });      
         }
     },
-    saveMessage: function(m_data, callback) {
-        if (m_data == null){
+    saveMessage: function(data, callback) {
+        if (data == null){
                callback('Ohne die benötigten Daten kann keine Nachricht weitergeleitet werden!');
-        }else if (m_data.fid != null && m_data.mid != null && m_data.eid != null && m_data.msg != null){
-            Nachricht.create(m_data, callback);      
+        }else if (data.f_id != null && data.m_id != null && data.e_id != null && data.msg != null){
+            Nachricht.create(data, callback);      
         }else callback("Es fehlen Daten, die benötigt werden.");
     },
-    saveGPS: function(gps_data, callback) {
-        if (gps_data == null){
+    getMessage: function(data, callback) { 
+        var nachrichten = [];
+        if (data == null){
+               callback('Ohne die benötigten Daten können keine Nachricht abgerufen werden!');
+        }else if (data.f_id != null && data.e_id != null){
+            Nachricht.find({f_id:data.f_id, e_id:data.e_id}, function(err, messages){
+                messages.forEach(function(msg){
+                    nachrichten.push({
+                        m_id: msg.m_id,
+                        msg: msg.msg});
+                });
+                callback(null, nachrichten);
+            });            
+        }else callback("Es fehlen Daten, die benötigt werden.");
+    },
+    getName: function(data, callback) {
+        var sender = [];
+        var count = 0;
+        var anzahl = data.length;
+        if (data == null){
+               callback('Es wurden keine Daten gefunden!');
+        }else{
+            data.forEach(function(person){
+                Person.find({_id:person.m_id}, function(err, user){
+                    user.forEach(function(name){
+                        count++;
+                        sender.push({
+                            m_id: person.m_id,
+                            mname: name.per_vorname+" "+name.per_name,
+                            msg: person.msg});
+                        if(anzahl == count) callback(null, sender);
+                    });
+                });
+            });
+        }
+    },
+    saveGPS: function(data, callback) {
+        if (data == null){
                callback('Ohne die benötigten Daten können keine Berechnungen stattfinden!');
-        }else if (gps_data.pid != null && gps_data.eid != null && gps_data.longitude != null && gps_data.latitude != null){
-            Fahrer.findOne({p_id:gps_data.pid, e_id:gps_data.eid}, function(err, feintrag){
+        }else if (data.pid != null && data.eid != null && data.longitude != null && data.latitude != null){
+            Fahrer.findOne({p_id:data.pid, e_id:data.eid}, function(err, feintrag){
                 if (feintrag == null){
-                    Mitfahrer.findOne({p_id:gps_data.pid, e_id:gps_data.eid}, function(err, meintrag){ 
-                        if (meintrag.pid == gps_data.pid && meintrag.eid == gps_data.eid){ 
-                                    Mitfahrer.update(meintrag, gps_data, callback);
+                    Mitfahrer.findOne({p_id:data.pid, e_id:data.eid}, function(err, meintrag){
+                        var tf = data.latitude == meintrag.latitude && data.longitude == meintrag.longitude;                    
+                        if (tf == false){ 
+                            console.log("Mitfahrerposition wird abgedatet.");
+                            Mitfahrer.update(meintrag, data, callback);
+                        }else if(tf == true){ 
+                            callback("GPS Daten haben sich nicht verändert.");
                         }else callback("GPS Daten konnten keiner Person zugeordnet werden!");
                     });
                 }else{ 
-                    if (feintrag.pid == gps_data.pid && feintrag.eid == gps_data.eid){ 
-                        if (feintrag.longitude != gps_data.longitude && feintrag.latitude != gps_data.latitude)
-                            //ToDO: Sende Daten an den Fahrer
-                            Fahrer.update(feintrag, gps_data, callback);
+                    if (feintrag.p_id == data.pid && feintrag.e_id == data.eid){ 
+                        var tf = data.latitude == feintrag.latitude && data.longitude == feintrag.longitude;                    
+                        if (tf == false){ 
+                            console.log("Fahrerposition wird abgedatet.");
+                            Fahrer.update(feintrag, data, callback);
+                        }else if(tf == true){ 
+                            callback("GPS Daten haben sich nicht verändert.");
+                        }else callback("GPS Daten konnten keiner Person zugeordnet werden!");
                     }
                 }
             });      
+        }else callback("Es fehlen Daten, die benötigt werden!");
+    },
+    getMitfahrer: function(data, callback) { 
+        var mitfahrer = [];
+        if (data == null){
+               callback('Ohne die benötigten Daten können keine Mitfahrer abgerufen werden!');
+        }else if (data.f_id != null && data.e_id != null){
+            Auto.find({f_id:data.f_id, e_id:data.e_id}, function(err, fahrer){
+                fahrer.forEach(function(rider){
+                    mitfahrer.push({m_id: rider.m_id});
+                });
+                callback(null, mitfahrer);
+            });            
         }else callback("Es fehlen Daten, die benötigt werden.");
+    },
+    getPosition: function(data, callback) {
+        var mitfahrer = [];
+        var count = 0;
+        var anzahl = data.length;
+        if (data == null){
+               callback('Es wurden keine Daten gefunden!');
+        }else{
+            data.forEach(function(person){
+                Mitfahrer.find({p_id:person.m_id}, function(err, user){
+                    user.forEach(function(position){
+                        count++;
+                        mitfahrer.push({
+                            m_id: person.m_id,
+                            mname: person.mname,
+                            latitude: position.latitude,
+                            longitude: position.longitude});
+                        if(anzahl == count) callback(null, mitfahrer);
+                    });
+                });
+            });
+        }
     },
     getEventDestination: function(eid, callback) {
         Event.findById(eid, function(err, ziel){
-            if (ziel == null || eid != ziel._id){
-                callback('Event nicht gefunden');
+            var tf = ziel == null && eid == ziel._id;
+            if (tf == true){
+                callback('Event wurde nicht gefunden');
             }else{
                 var dest = ziel.e_strasse;
                 dest += ", "+ziel.e_stadt
@@ -226,7 +306,7 @@ var store = {
     getDriverOrigin: function(data, callback) {
         Fahrer.findOne({p_id:data.pid, e_id:data.eid}, function(err, start){
             if (start == null || data.eid != start.e_id || data.pid != start.p_id){
-                callback('Keine passenden Daten gefunden!');
+                callback('Es wurden keine passenden Daten gefunden!');
             }else{    
                 var gps = start.latitude;
                 gps += ", "+start.longitude;
@@ -243,7 +323,7 @@ var store = {
             destinations: destinations,
             mode: 'driving'
             }, function(err, data) {
-                if (err) callback(err+" des klappt nicht!");
+                if (err) callback(err);
                 data.forEach(function(value) {
                     duration = value.duration;
                 });
