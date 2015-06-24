@@ -1,15 +1,29 @@
 //Required modules
 var express = require('express');
-var app = express();
-var port = 3000;
+var faye = require('faye');
 var http = require('http');
 var bodyParser = require('body-parser');
 var nodemailer = require("nodemailer");
 var moment = require("moment");
+// Express und Server
+var app = express();
 var server = http.createServer(app);
 
 // Verlinkung der Datenbank
 var store = require('./store.js');
+var fill = require('./fill.js');
+
+
+// Nodeadapter konfigurieren
+// Nodeadapter zu http-Server hinzufügen
+//PubSub-Client erzeugen
+var bayeux = new faye.NodeAdapter({
+	mount: '/faye',
+	timeout: 45
+});
+
+bayeux.attach(server);
+var pubClient = bayeux.getClient();
 
 // Applikation konfigurieren
 app.set('port', 3000);
@@ -156,11 +170,13 @@ app.get('/home/:id/events', function(req, res){
         if (!person){
             res.status(400).send(err);
         }else{
+            
             store.getAllEvents(person.per_mannschaft, function(err, events){
                 if(err) {
                     res.writeHead(500, "Es ist ein Fehler aufgetreten");
                 }else{
-                    res.render('events', {person:person, events:events});    
+                    res.render('events', {person:person, events:events});
+                    fill.Zuteilung("FC Gummersbach", function(err, driver){}); 
                 }
             });
         }
@@ -210,7 +226,6 @@ app.post('/home/:id/new_event', function(req, res){
         }
     });
 });
-
 app.get('*', function(req, res){ 
     res.render('404');
 });
@@ -239,9 +254,6 @@ app.post('/login', function(req, res){
 app.post('/register', function(req, res){
     var vorname= req.body.vorname;
     var name= req.body.nachname;
-    var email= req.body.email;
-    var benutzer= req.body.benutzer;
-    var pw= req.body.passwort;
 
     res.setHeader('Content-Type', 'application/json');
     console.log("Spieler: "+vorname+" "+name+" wird angelegt.");
@@ -298,8 +310,8 @@ app.post('/fahrtmenue', function(req, res){
 app.post('/fahrtauswahl', function(req, res){
     res.setHeader('Content-Type', 'application/json');
     store.savePlayerStatus({
-        p_id     : req.body.p_id,
-        e_id     : req.body.e_id
+        pid     : req.body.p_id,
+        eid     : req.body.e_id,
     }, req.body.status, function(err){
         if (err){
             res.status(400).send(JSON.stringify({ "state": 0, "message" : err }));
@@ -324,34 +336,15 @@ app.post('/getDriver', function(req, res){
 app.post('/sendMessage', function(req, res){
     res.setHeader('Content-Type', 'application/json');
     store.saveMessage({
-        f_id     : req.body.f_id,
-        m_id     : req.body.p_id,
-        e_id     : req.body.e_id,
+        fid     : req.body.f_id,
+        mid     : req.body.p_id,
+        eid     : req.body.e_id,
         msg     : req.body.msg
     }, function(err){
         if (err){
             res.status(400).send(JSON.stringify({ "state": 0, "message" : err }));
         }else{
             res.status(200).send(JSON.stringify({ "state": 1, "message" : "erfolgreich" }));
-        }
-    });  
-});
-app.post('/getMessage', function(req, res){
-    res.setHeader('Content-Type', 'application/json');
-    store.getMessage({
-        f_id     : req.body.f_id,
-        e_id     : req.body.e_id
-    }, function(err, id){
-        if (err){
-            res.status(400).send(JSON.stringify({ "state": 0, "message" : err }));
-        }else{
-            store.getName(id, function(err, nachrichten){
-                if (err){
-                    res.status(400).send(JSON.stringify({ "state": 0, "message" : err }));
-                }else{
-                    res.status(200).send(JSON.stringify({ "state": 1, nachrichten:nachrichten }));
-                }
-            });
         }
     });  
 });
@@ -370,28 +363,17 @@ app.post('/sendGPS', function(req, res){
         }
     });  
 });
-app.post('/getMitfahrer', function(req, res){
+app.post('/auto', function(req, res){
     res.setHeader('Content-Type', 'application/json');
-    store.getMitfahrer({
-        f_id     : req.body.f_id,
-        e_id     : req.body.e_id
-    }, function(err, id){
+    store.auto({
+        fid          : req.body.f_id,
+        mid          : req.body.m_id,
+        eid          : req.body.e_id
+    }, function(err){
         if (err){
             res.status(400).send(JSON.stringify({ "state": 0, "message" : err }));
         }else{
-            store.getName(id, function(err, namen){
-                if (err){
-                    res.status(400).send(JSON.stringify({ "state": 0, "message" : err }));
-                }else{
-                    store.getPosition(namen, function(err, mitf_position){
-                        if (err){
-                            res.status(400).send(JSON.stringify({ "state": 0, "message" : err }));
-                        }else{
-                            res.status(200).send(JSON.stringify({ "state": 1, mitf_position:mitf_position }));
-                        }
-                    });
-                }
-            });
+            res.status(200).send(JSON.stringify({ "state": 1, "message" : "erfolgreich" }));
         }
     });  
 });
@@ -409,8 +391,10 @@ app.post('/abfahrtzeitpunkt', function(req, res){
                         if (err){
                             res.status(400).send(JSON.stringify({ "state": 0, "message" : err }));
                         }else{
+                            //var b = moment(time, "mm");
                             var abfahrt = moment(treffpunkt, "hh:mm").subtract(moment(time, "mm")).subtract(20, 'minute').format("hh:mm");
-                            res.status(200).send(JSON.stringify({ "state": 1, abfahrt:abfahrt, treffpunkt:treffpunkt }));
+                            //c = moment(c, "hh:mm");
+                            res.status(200).send(JSON.stringify({ "state": 1, abfahrt:abfahrt}));
                         }
                     });
                 }
@@ -421,22 +405,6 @@ app.post('/abfahrtzeitpunkt', function(req, res){
 
 
 //Start Server on Port
-server.listen(port, function () {
-	console.log('Der Server wurde mit dem Port '+port+' gestartet.');
+server.listen(3000, function () {
+	console.log('Der Server wurde mit dem Port 3000 gestartet.');
 });
-
-/*app.post('/auto', function(req, res){
-    res.setHeader('Content-Type', 'application/json');
-    store.auto({
-        fid          : req.body.f_id,
-        mid          : req.body.m_id,
-        eid          : req.body.e_id
-    }, function(err){
-        if (err){
-            res.status(400).send(JSON.stringify({ "state": 0, "message" : err }));
-        }else{
-            res.status(200).send(JSON.stringify({ "state": 1, "message" : "erfolgreich" }));
-        }
-    });  
-});*/
-
