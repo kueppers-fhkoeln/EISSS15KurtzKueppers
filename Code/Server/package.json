@@ -16,6 +16,6 @@
     "mongoose": "*",
     "nodemailer": "0.7.1",
     "google-distance": "1.0.1",
-    "password-hash": "*",
+    "password-hash": "*"
   }
 }
