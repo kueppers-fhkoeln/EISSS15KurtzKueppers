@@ -11,7 +11,7 @@ var server = http.createServer(app);
 
 // Verlinkung der Datenbank
 var store = require('./store.js');
-var fill = require('./fill.js');
+var fill = require('./fill.js'); //testweise app.get('/home/:id/events')
 
 
 // Nodeadapter konfigurieren
