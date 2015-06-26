@@ -1,4 +1,0 @@
-C:\Users\Vsevolod\AndroidStudioProjects\TeamDrive\app\build\intermediates\classes\debug
-C:\Users\Vsevolod\AndroidStudioProjects\TeamDrive\app\build\intermediates\pre-dexed\debug\android-async-http-1.4.4-ebf6183330fd29c640249b4db87480038717ed42.jar
-C:\Users\Vsevolod\AndroidStudioProjects\TeamDrive\app\build\intermediates\pre-dexed\debug\classes-b3a18cf0b05242cc75cda842bfbb545c961647ec.jar
-C:\Users\Vsevolod\AndroidStudioProjects\TeamDrive\app\build\intermediates\pre-dexed\debug\support-v4-19.1.0-fcc3d049851fb023bc81cf710504cfe8992c5dc5.jar
