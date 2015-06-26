@@ -1,20 +1,31 @@
 var store = require('./store.js');
 var distance = require('google-distance');
 
-var test_id  = "5581991f65135bf01999a408";
-/* Was fehlt: vorherige Prüfung: zuviele Mitfahrer / zu wenige Fahrer muss seperat gemacht werden. Überlegen was bei zu vielen Fahrern ist.
-Die Übertragung der var Fahrer.Mitfahrer in die Datenbank (das ist die entgültige Aufteilung) fehlt. Wo genau sollen die Fahrer.Mitfahrer (ist nen Array) gespeichert werden?
-*/
 
+/* Was fehlt: vorherige Prüfung: zuviele Mitfahrer / zu wenige Fahrer muss seperat gemacht werden. Überlegen was bei zu vielen Fahrern ist.*/
 
 
 
 var fill = {
 
-Zuteilung: function(e_id, callback){
+Zuteilung: function(mannschaft, callback){
 
 var Fahrer = [];
 var Mitfahrer = [];
+var e_id;
+    
+function getEvent_iD(){
+store.getActualEvent(mannschaft, function(err, event){
+    if(err){
+        callback("Error");
+        console.log(err);
+    }
+    else{
+        e_id = event[0]._id;
+        console.log(event);
+        console.log("Event_id: "+ event[0]._id);
+    };});};
+        
 
 
 function ersteDBAbfrage(){
@@ -23,34 +34,33 @@ store.getAllEventDriver(e_id, function(err, driver){
         callback("Error");
     }
     else {
-        //console.log("driver");
-        //console.log(driver);
         driver.forEach(function(itemdriver){
-            console.log("itemdriver._id");
-            console.log(itemdriver._id);
-            var plaetze = 4;  //die Abfrage funktinert noch nicht
-            /*
-            store.getPerson(itemdriver._id, function(err, user){
-                if (err){
-                    console.log(err);
-                    plaetze = 5; //Achtung muss geändert werden, am besten kommen die Plätze in eine andere Collection
-                    console.log("AnzahlPlätzt: "+ plaetze);
-                }
-                else {
-                plaetze = user.per_sitzplaetze; 
-                if (person.per_sitzplaetze == 0){
-                    callback("Keine Sitzplärtzt-Fataler Fehler");
-                };
-                };
-            }); */
-            Fahrer.push({
-                Fahrer_id: itemdriver._id,
+            var plaetze ;  //die Abfrage funktinert noch nicht
+            store.getPerson(itemdriver.p_id.toString(), function(err, user){
+                console.log("itemdriver._id: " + itemdriver._id);
+    if (err){
+        callback(err);
+        /*
+        console.log("Hat nicht funktionert");
+        console.log("itemdriver._id_hatnicht gefunzt: " + itemdriver.p_id);*/
+        console.log(err);
+    }
+    else {
+        console.log("user");
+        console.log(user);
+        console.log(user.per_sitzplaetze);
+        plaetze = user.per_sitzplaetze;
+        console.log("plaetzte"+ plaetze);
+        Fahrer.push({
+                Fahrer_id: itemdriver.p_id,
                 longitude: itemdriver.longitude,
                 latitude:  itemdriver.latitude,
-                FreiePlaetze: plaetze,
+                FreiePlaetze: (user.per_sitzplaetze - 1),
                 Mitfahrer: []
             });
-
+    }
+});
+            
             });
     };
 });
@@ -62,7 +72,7 @@ store.getAllEventDriver(e_id, function(err, driver){
         //console.log(Fahrer[0]);
  
 
-store.getAllEventRider(test_id, function(err, rider){
+store.getAllEventRider(e_id, function(err, rider){
     if (err){
         callback("Error");
     }
@@ -71,7 +81,7 @@ store.getAllEventRider(test_id, function(err, rider){
         //console.log(rider);
         rider.forEach(function(itemrider){
             Mitfahrer.push({
-                Mitfahrer_id: itemrider._id,
+                Mitfahrer_id: itemrider.p_id,
                 longitude: itemrider.longitude,
                 latitude:  itemrider.latitude,
                 Fahrer: []
@@ -162,9 +172,25 @@ Mitfahrer.forEach(function (itemM) {
         return true;
        });
 });
-
-    
 };
+
+function SpeichernDB(){
+Fahrer.forEach(function (itemFahrer) {
+    itemFahrer.Mitfahrer.forEach(function (itemFahrerMitfahrer) {
+        store.saveAuto(itemFahrer.Fahrer_id,itemFahrerMitfahrer, e_id, function(err, callback){
+            
+    console.log("Was wurde gesendet?");
+    console.log(itemFahrer.Fahrer_id + itemFahrerMitfahrer + e_id);
+    if (err){
+        console.log("Abspeichern nicht erfolgreich");
+        console.log(err);
+}else{
+     console.log("Abspeichern erfolgreich");
+}});
+});
+});
+};
+    
 function endausgabe(){
     console.log("________________________________________________________________________");
     console.log("Mitfahrer");
@@ -172,12 +198,13 @@ function endausgabe(){
     console.log("Fahrer");
     console.log(Fahrer);
 };
-
-ersteDBAbfrage();
+getEvent_iD();
+setTimeout(ersteDBAbfrage, 500);    
 setTimeout(distanzen, 1000);
 setTimeout(ersterssortieren,2000);
 setTimeout(zweitessortiern,3000);
-setTimeout(endausgabe, 4000);
+setTimeout(SpeichernDB,4000);    
+setTimeout(endausgabe, 5000);
 
 
 }};

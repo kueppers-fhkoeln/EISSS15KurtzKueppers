@@ -9,6 +9,9 @@ var moment = require("moment");
 // Verlinkung der Datenbankabfragen
 var store = require('./store.js');
 
+//Verlinkung für die Zuteilung
+var fill = require('./fill.js');
+
 // Variablen für den Server werden gesetzt
 var port = 3000;
 var server = http.createServer(app);
@@ -220,7 +223,9 @@ app.get('/home/:id/events', function(req, res){
                 if(err) {
                     res.writeHead(500, "Es ist ein Fehler aufgetreten");
                 }else{
-                    res.render('events', {person:person, events:events});    
+                    res.render('events', {person:person, events:events});
+                    // Testweise Ausführung der Zuteilung
+                    fill.Zuteilung("FC Gummersbach", function(err, driver){});
                 }
             });
         }

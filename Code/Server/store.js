@@ -408,6 +408,51 @@ var store = {
                 }
             });      
     },
+     getAllEventDriver: function(event_id, callback) { 
+        Fahrer.find({e_id:event_id}, function(err, driver) {
+            if (err) {callback(err)}
+            else { callback(null, driver)
+           // console.log("store.driver");
+                //  console.log(driver);
+            
+                 }
+        });
+    },
+    getAllEventRider: function(event_id, callback) { 
+        Mitfahrer.find({e_id:event_id}, function(err, rider) {
+            if (err) {callback(err)}
+            else {callback(null, rider)
+           }
+        });
+    },
+    
+    saveAuto: function(fahrer_id, mitfahrer_id, event_id, callback) {
+        if (fahrer_id == null || mitfahrer_id == null || event_id == null){
+               callback('Ohne Daten, kein Autoeintrag möglich!');
+        }else{
+            Auto.findOne({m_id:mitfahrer_id}, {e_id:event_id}, function(err, eintrag){
+                if (eintrag == null){
+                    Auto.create({
+                        f_id: fahrer_id,
+                        m_id: mitfahrer_id,
+                        e_id: event_id
+                }, callback);
+                    }
+                else callback('Mitfahrer bereits in Auto eingetragen!');
+            
+        });
+        };
+    },
+    
+    getActualEvent: function(mannschaft, callback) {
+        Event.find({e_mannschaft:mannschaft}).where('e_datum').gt(yesterday).sort({'e_datum': 1}).sort({'e_uhrzeit': 1}).exec(function(err, event) {
+            if (err){
+                callback(err);
+            }
+            else{ callback(null, event);
+                }
+        });
+    },
 };
 //----------------------------------------------------------------------------------------------------------------------------------------------
 //Weitere Variablen vom Server ----------------------------------------------------------------------------------------------------------------
