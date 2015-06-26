@@ -1,2 +1,0 @@
-Siehe im Hauptverzeichnis unter "Code".
-Da Liegen APK, Serverdaten und das nicht komplilierte Android Projekt.
