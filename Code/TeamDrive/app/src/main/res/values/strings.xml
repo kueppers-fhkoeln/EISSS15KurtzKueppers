@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TeamDrive</string>
+    <string name="action_settings">Optionen</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_home">Homescreen</string>
+    <string name="register_title">Registrieren</string>
+    <string name="login_title">Login</string>
+    <string name="btnRegister">Registrieren</string>
+    <string name="title_activity_mitfahrer">Mitfahrermenü</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_fahrt">Fahrtmenü</string>
+    <string name="title_activity_fahrer">Fahrermenü</string>
+    <string name="confirm_anmelden_fahrer">Bitte bestätigen Sie, dass Sie sich als Mitfahrer zu diesem Event anmelden möchten.</string>
+    <string name="confirm_anmelden_fahrer_text">Bitte bestätigen Sie, dass Sie sich als Fahrer zu diesem Event anmelden möchten.</string>
+</resources>

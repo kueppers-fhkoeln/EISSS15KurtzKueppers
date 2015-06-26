@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dip" >
+
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="fill_vertical"
+                android:layout_marginTop="20pt"
+                android:gravity="center_horizontal"
+                android:text="Sie sind angemeldet."
+                android:textSize="25dip" android:id="@+id/txtHomeNachricht"/>
+
+        <Button
+                android:id="@+id/btnHomeFartMenu"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dip"
+                android:background="#00e7e9"
+                android:text="Fahrtmenü"
+                android:textColor="#000" />
+        <Button
+                android:id="@+id/btnHomeFahrerMenu"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dip"
+                android:background="#e6e7e9"
+                android:text="Fahrermenü"
+                android:textColor="#000" />
+
+
+
+        <Button
+                android:id="@+id/btnHomeMitfahrerMenu"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dip"
+                android:background="#e6e7e9"
+                android:text="Mitfahrermenü"
+                android:textColor="#000" />
+
+        <Button
+                android:id="@+id/btnHomeLogout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dip"
+                android:background="#00e7e9"
+                android:text="Abmelden"
+                android:textColor="#000" />
+    </LinearLayout>
+
+</ScrollView>

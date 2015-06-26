@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\Users\Vsevolod\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.3\5fc52c41ef0239d1093a1eb7c3697036183677ce\gson-2.3.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="5fc52c41ef0239d1093a1eb7c3697036183677ce">
+        <dex dex="C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\gson-2.3-20617e6b19fce9562b789fbd54e07660fb87c0f1.jar" />
+    </item>
+    <item
+        jar="C:\TeamDrive\APK\TeamDrive\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\19.1.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="3499ceba05ca1f6037c6a2fad73df8f636224a28">
+        <dex dex="C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\classes-36bba2b929070b8c1b3ff4de7e0acfe0d3cc814e.jar" />
+    </item>
+    <item
+        jar="C:\TeamDrive\APK\TeamDrive\app\libs\android-async-http-1.4.4.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="3bae85a076241828810bf8fbcc12e5891d5fc34c">
+        <dex dex="C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\android-async-http-1.4.4-52cf509345feb87e870180af20a282c130b61cf5.jar" />
+    </item>
+    <item
+        jar="C:\Users\Vsevolod\.gradle\caches\modules-2\files-2.1\com.jakewharton\butterknife\6.1.0\63735f48b82bcd24cdd33821342428252eb1ca5a\butterknife-6.1.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="63735f48b82bcd24cdd33821342428252eb1ca5a">
+        <dex dex="C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\butterknife-6.1.0-50eb12bc34e3ad1a4a392079e20b518a99e2c550.jar" />
+    </item>
+    <item
+        jar="C:\Users\Vsevolod\.gradle\caches\modules-2\files-2.1\com.koushikdutta.async\androidasync\2.1.6\e3d5f6ab2003e31f2cf5ea61b4731a21e9517935\androidasync-2.1.6.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="e3d5f6ab2003e31f2cf5ea61b4731a21e9517935">
+        <dex dex="C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\androidasync-2.1.6-e9cda38365258dbe8e1ef21f1295178528f87a71.jar" />
+    </item>
+    <item
+        jar="C:\Users\Vsevolod\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.0\support-annotations-21.0.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="1a578b9607b36266c63d43a4fa0ab5664dbe911e">
+        <dex dex="C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.0-2091233cc6e5c7827b821aa9ead07860554a7d4b.jar" />
+    </item>
+    <item
+        jar="C:\Users\Vsevolod\.gradle\caches\modules-2\files-2.1\com.koushikdutta.ion\ion\2.1.6\cd55ef3ba6d8b62838b658ba2507b019dffb3a08\ion-2.1.6.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="cd55ef3ba6d8b62838b658ba2507b019dffb3a08">
+        <dex dex="C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\ion-2.1.6-d4d1fe5b66c714221e9bfba97e2ff488c9b93c5e.jar" />
+    </item>
+    <item
+        jar="C:\TeamDrive\APK\TeamDrive\app\build\intermediates\exploded-aar\com.google.android.gms\play-services\6.5.87\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="dd9247ea0fabe8ee479638c4b4a23e93752be256">
+        <dex dex="C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\classes-1682e3dfcdb94d60f6111a9ba3202772276755c9.jar" />
+    </item>
+    <item
+        jar="C:\TeamDrive\APK\TeamDrive\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="686344a780033e4ba22b926cd225f8d4941247e6">
+        <dex dex="C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\classes-c2b95069d9fc1d03152de3fae66d8ecb6804f3d4.jar" />
+    </item>
+    <item
+        jar="C:\TeamDrive\APK\TeamDrive\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.0\libs\internal_impl-21.0.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="1609e6d42d0480b0f4188e2c29f75388fa12a8f0">
+        <dex dex="C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.0-e8dadeb4ed2b2d1cda04ff7efadf0aadff1b0189.jar" />
+    </item>
+
+</items>

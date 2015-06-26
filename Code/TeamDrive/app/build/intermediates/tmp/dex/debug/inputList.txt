@@ -1,0 +1,11 @@
+C:\TeamDrive\APK\TeamDrive\app\build\intermediates\classes\debug
+C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.0-2091233cc6e5c7827b821aa9ead07860554a7d4b.jar
+C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\butterknife-6.1.0-50eb12bc34e3ad1a4a392079e20b518a99e2c550.jar
+C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\android-async-http-1.4.4-52cf509345feb87e870180af20a282c130b61cf5.jar
+C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.0-e8dadeb4ed2b2d1cda04ff7efadf0aadff1b0189.jar
+C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\gson-2.3-20617e6b19fce9562b789fbd54e07660fb87c0f1.jar
+C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\ion-2.1.6-d4d1fe5b66c714221e9bfba97e2ff488c9b93c5e.jar
+C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\classes-36bba2b929070b8c1b3ff4de7e0acfe0d3cc814e.jar
+C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\androidasync-2.1.6-e9cda38365258dbe8e1ef21f1295178528f87a71.jar
+C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\classes-c2b95069d9fc1d03152de3fae66d8ecb6804f3d4.jar
+C:\TeamDrive\APK\TeamDrive\app\build\intermediates\pre-dexed\debug\classes-1682e3dfcdb94d60f6111a9ba3202772276755c9.jar
