@@ -6,7 +6,6 @@ html
         link(rel='icon', href='/img/ico.ico')
         link(rel='stylesheet', href='/css/admin.css', type='text/css')
         script(src='/script/jade.js')
-        script(src='/faye/client.js')
         script(src='http://code.jquery.com/jquery-1.11.0.min.js')
 
     body
@@ -22,12 +21,12 @@ html
     
             #heading
                 h2= person.per_mannschaft
-                h1 Zielübersicht
+                h1 Eventübersicht
                 
                 .box_content
                     form#anlegen(method='get', action='/home/'+person._id+'/new_event')
                         input#id(name='id', type='hidden', value=person._id)
-                        input.anlegen(value="Event hinzufügen", type="submit")
+                        input.anlegen(value="Event anlegen", type="submit")
                     fieldset
                         table.eventverzeichnis
                             thead

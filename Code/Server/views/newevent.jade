@@ -2,11 +2,10 @@ doctype html
 html
     head
         meta(charset='UTF-8')
-        title= "TeamDrive - Event hinzufügen"
+        title= "TeamDrive - Event anlegen"
         link(rel='icon', href='/img/ico.ico')
         link(rel='stylesheet', href='/css/admin.css', type='text/css')
         script(src='/script/jade.js')
-        script(src='/faye/client.js')
         script(src='http://code.jquery.com/jquery-1.11.0.min.js')
 
     body
@@ -22,7 +21,7 @@ html
     
             #heading
                 h2= person.per_mannschaft
-                h1 Event hinzufügen
+                h1 Event anlegen
                 
                 .box_content
                     fieldset
@@ -46,6 +45,9 @@ html
                             #time-cg
                                 label(for='time-tf') Uhrzeit
                                 input#time-tf(type='time', name='time')
+                            #treff-cg
+                                label(for='treff-tf') Treffpunkt
+                                input#treff-tf(type='time', name='treff')
                             hr
                             input.half_bButton(type='submit', value='Event anlegen')
                             input.half_rButton(type='reset', value='Löschen')
