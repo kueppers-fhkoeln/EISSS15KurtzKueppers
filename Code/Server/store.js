@@ -120,7 +120,7 @@ var store = {
         // Löscht eine Person mit der ID
         Person.remove({per_benutzer:id}, callback);
     },
-    addNewPlayer: function(per_data, callback) {
+    addNewPerson: function(per_data, callback) {
         // Sucht eine Person nach dem "benutzernamen"
         // Falls vorhanden, Fehlerausgabe, sonst wird die Person erstellt 
         Person.findOne({per_benutzer:per_data.per_benutzer}, function(err, users) {
@@ -128,6 +128,17 @@ var store = {
                 callback('Benutzername wurde schon verwendet!');
             }else{
                 Person.create(per_data, callback);
+            }
+        });
+    },
+    addNewTeam: function(data, callback) {
+        // Sucht eine Mannschaft nach dem "mannschaftsnamen"
+        // Falls vorhanden, Fehlerausgabe, sonst wird die Mannschaft erstellt 
+        Mannschaft.findOne({man_name:data.man_name}, function(err, team) {
+            if (team){
+                callback('Die Mannschaft exisitiert bereits!');
+            }else{
+                Mannschaft.create(data, callback);
             }
         });
     },

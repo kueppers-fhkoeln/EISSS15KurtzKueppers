@@ -65,6 +65,50 @@ app.post('/', function(req, res){
         }
     });
 });
+app.get('/newTeam', function(req, res){
+    res.render('newteam');    
+});
+app.post('/newTeam', function(req, res){
+    // Setzen der Variablen für spätere Verwendung
+    var mannschaft= req.body.mannschaft;
+    var vorname= req.body.firstname;
+    var name= req.body.lastname;
+    // Aufruf der Funktion addNewTeam mit einem gefüllten Array
+    store.addNewTeam({
+        man_name            : req.body.mannschaft,
+        man_strasse         : req.body.mstrasse,
+        man_stadt           : req.body.mstadt,
+    }, function(err){
+        if (err){
+            res.status(400).send(err);
+        }else{
+            // Aufruf der Funktion addNewPerson mit einem gefüllten Array
+             store.addNewPerson({
+                per_mannschaft      : req.body.mannschaft,
+                per_vorname         : req.body.firstname,
+                per_name            : req.body.lastname,
+                per_tel             : req.body.tel,
+                per_mobil           : req.body.mobile,
+                per_email           : req.body.email,
+                per_status          : req.body.status,
+                per_strasse         : req.body.street,
+                per_stadt           : req.body.city,
+                per_auto            : req.body.auto,
+                per_sitzplaetze     : req.body.plaetze,
+                per_benutzer        : req.body.user,
+                per_pw              : req.body.pwd,
+            }, function(err){
+                if (err){
+                    res.status(400).send(err);
+                }else{
+                    console.log("Mannschaft: "+mannschaft+" wurde angelegt.");
+                    console.log("Administrator: "+vorname+" "+name+" wurde angelegt.");
+                    res.redirect('/');
+                }
+            });
+        }
+    });
+});
 app.get('/home/:id', function(req, res){
     // Aufruf der Funktion getPerson mit "benutzer id"
     // Rückgabewert ist ein Array mit den Personendaten
@@ -286,8 +330,8 @@ app.post('/register', function(req, res){
 
     // Daten als JSON an die Applikation setzen
     res.setHeader('Content-Type', 'application/json');
-    // Aufruf der Funktion addNewPlayer mit gefülltem Array
-    store.addNewPlayer({
+    // Aufruf der Funktion addNewPerson mit gefülltem Array
+    store.addNewPerson({
         per_mannschaft      : req.body.mannschaft,
         per_vorname         : req.body.vorname,
         per_name            : req.body.nachname,

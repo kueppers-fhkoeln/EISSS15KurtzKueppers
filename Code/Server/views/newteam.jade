@@ -1,0 +1,75 @@
+doctype html
+html
+    head
+        meta(charset='UTF-8')
+        title= "TeamDrive - Mannschaft anlegen"
+        link(rel='icon', href='/img/ico.ico')
+        link(rel='stylesheet', href='/css/admin.css', type='text/css')
+        script(src='/script/jade.js')
+        script(src='http://code.jquery.com/jquery-1.11.0.min.js')
+
+    body
+        #header_content
+            .logo
+                img(width='50', height='50', src='/img/LOGO1.png', alt='Logo')
+            .lname
+                h2 TeamDrive
+    
+            #heading
+                h2 Mannschaft und Trainer eingeben
+                h1 Mannschaft anlegen
+                
+                .box_content
+                    fieldset
+                        form#new_mitarbeiter(method="post")
+                            #mannschaft-cg
+                                label(for='mannschaft-tf') Vereinsname
+                                input#mannschaft-tf(type='text', name='mannschaft')
+                            #mstrasse-cg
+                                label(for='mstrasse-tf') Straße und Hausnr.
+                                input#mstrasse-tf(type='text', name='mstrasse')
+                            #mstadt-cg
+                                label(for='mstadt-tf') Stadt
+                                input#mstadt-tf(type='text', name='mstadt')
+                            hr
+                            #firstname-cg
+                                label(for='firstname-tf') Vorname
+                                input#firstname-tf(type='text', name='firstname')
+                            #lastname-cg
+                                label(for='lastname-tf') Nachname
+                                input#lastname-tf(type='text', name='lastname')
+                            #tel-cg
+                                label(for='tel-tf') Telefon
+                                input#tel-tf(type='text', name='tel')
+                            #mobile-cg
+                                label(for='mobile-tf') Mobiltelefon
+                                input#mobile-tf(type='text', name='mobile')
+                            #email-cg
+                                label(for='email-tf') E-Mail
+                                input#email-tf(type='text', name='email')
+                                input#status-tf(type='hidden', name='status' value='Administrator')
+                            #street-cg
+                                label(for='street-tf') Straße und Hausnr.
+                                input#street-tf(type='text', name='street')
+                            #city-cg
+                                label(for='city-tf') Stadt
+                                input#city-tf(type='text', name='city')
+                            #auto-cg
+                                label(for='auto-tf') Auto
+                                select#auto-tf(name='auto')
+                                    option(value='', selected='') Bitte auswählen
+                                    option(value='true') Ja
+                                    option(value='false') Nein
+                            #plaetze-cg
+                                label(for='plaetze-tf') Sitzplätze
+                                input#plaetze-tf(type='number', name='plaetze')
+                            hr
+                            #user-cg
+                                label(for='user-tf') Benutzername
+                                input#user-tf(type='text', name='user')
+                            #pwd-cg
+                                label(for='pwd-tf') Passwort
+                                input#pwd-tf(type='password', name='pwd')
+                            hr
+                            input.half_bButton(type='submit', value='Mannschaft anlegen')
+                            input.half_rButton(type='reset', value='Löschen')
