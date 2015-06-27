@@ -409,6 +409,7 @@ var store = {
             });      
     },
      getAllEventDriver: function(event_id, callback) { 
+        //Suche Fahrer des Events mit der entsprechenden "event_id"
         Fahrer.find({e_id:event_id}, function(err, driver) {
             if (err) {callback(err)}
             else { callback(null, driver)
@@ -419,6 +420,7 @@ var store = {
         });
     },
     getAllEventRider: function(event_id, callback) { 
+         //Suche Mitfahrer des Events mit der entsprechenden "event_id"
         Mitfahrer.find({e_id:event_id}, function(err, rider) {
             if (err) {callback(err)}
             else {callback(null, rider)
@@ -427,10 +429,12 @@ var store = {
     },
     
     saveAuto: function(fahrer_id, mitfahrer_id, event_id, callback) {
+        //Speicher die IDs des Fahrers, seinens Mitfahrers und das Events in die Collection Auto
         if (fahrer_id == null || mitfahrer_id == null || event_id == null){
                callback('Ohne Daten, kein Autoeintrag möglich!');
         }else{
             Auto.findOne({m_id:mitfahrer_id}, {e_id:event_id}, function(err, eintrag){
+                //Die Speicherung wird nur durchgeführt, wenn der Mitfahrer zu dem entsprechenden Event noch nicht der Collection Auto eingetragen ist.
                 if (eintrag == null){
                     Auto.create({
                         f_id: fahrer_id,
@@ -445,7 +449,8 @@ var store = {
     },
     
     getActualEvent: function(mannschaft, callback) {
-        Event.find({e_mannschaft:mannschaft}).where('e_datum').gt(yesterday).sort({'e_datum': 1}).sort({'e_uhrzeit': 1}).exec(function(err, event) {
+        //Suche das naechste Event anhand des Mannschaftsnamen
+         Event.find({e_mannschaft:mannschaft}).where('e_datum').gt(yesterday).sort({'e_datum': 1}).sort({'e_uhrzeit': 1}).exec(function(err, event) {
             if (err){
                 callback(err);
             }

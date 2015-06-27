@@ -2,31 +2,41 @@ var store = require('./store.js');
 var distance = require('google-distance');
 
 
-/* Was fehlt: vorherige Prüfung: zuviele Mitfahrer / zu wenige Fahrer muss seperat gemacht werden. Überlegen was bei zu vielen Fahrern ist.*/
-
-
-
 var fill = {
-
+//Annahme: es sind genügend Fahrer bzw. Sitzplätze vorhanden
 Zuteilung: function(mannschaft, callback){
 
 var Fahrer = [];
 var Mitfahrer = [];
 var e_id;
     
+/* Aufbau der beiden Variablen
+ var Mitfahrer = [{
+        Mitfahrer_id:'',
+        longitude: '',
+        latitude:  '',
+        minEntfernung: '',
+        fahrer: [{Fahrer_id:'', Entfernung: ''}]
+    }];
+            
+    var Fahrer = [{
+        Fahrer_id: '',
+        longitude: '',
+        latitude:  '',
+        mitfahrer: [{Mitfahrer_id: ''}]*/
+    
 function getEvent_iD(){
+    //Speichere die ID des nächsten Events in die Variable e_id
 store.getActualEvent(mannschaft, function(err, event){
     if(err){
         callback("Error");
-        console.log(err);
     }
     else{
         e_id = event[0]._id;
-        console.log(event);
-        console.log("Event_id: "+ event[0]._id);
-    };});};
+    };
+});
+};
         
-
 
 function ersteDBAbfrage(){
 store.getAllEventDriver(e_id, function(err, driver){
@@ -34,51 +44,37 @@ store.getAllEventDriver(e_id, function(err, driver){
         callback("Error");
     }
     else {
+        //Gehe alle Einträge in der Collection "Fahrer" durch...
         driver.forEach(function(itemdriver){
-            var plaetze ;  //die Abfrage funktinert noch nicht
+            //...Speicher mit der jeweiligen ID der Fahrer die Anzahl der Sitzplaetze (in der Collection Person enthalten)...
             store.getPerson(itemdriver.p_id.toString(), function(err, user){
-                console.log("itemdriver._id: " + itemdriver._id);
-    if (err){
-        callback(err);
-        /*
-        console.log("Hat nicht funktionert");
-        console.log("itemdriver._id_hatnicht gefunzt: " + itemdriver.p_id);*/
-        console.log(err);
-    }
-    else {
-        console.log("user");
-        console.log(user);
-        console.log(user.per_sitzplaetze);
-        plaetze = user.per_sitzplaetze;
-        console.log("plaetzte"+ plaetze);
-        Fahrer.push({
-                Fahrer_id: itemdriver.p_id,
-                longitude: itemdriver.longitude,
-                latitude:  itemdriver.latitude,
-                FreiePlaetze: (user.per_sitzplaetze - 1),
-                Mitfahrer: []
+                if (err){
+                    callback(err);
+                    console.log(err);
+                }
+                else {
+                    //...in die Variale Fahrer sowie entsprechende weitere Werte des jweiligen Fahrers aus der Collection Fahrer
+                    Fahrer.push({
+                            Fahrer_id: itemdriver.p_id,
+                            longitude: itemdriver.longitude,
+                            latitude:  itemdriver.latitude,
+                            FreiePlaetze: (user.per_sitzplaetze - 1),
+                            Mitfahrer: []
+                    });
+                }
             });
-    }
-});
             
-            });
+        });
     };
 });
-            
-        //console.log("Fahrerarray");
-        //console.log(Fahrer);
-        //Fahrer[0].Mitfahrer.push({Mitfahrer_id:"test"});
-        //console.log("Fahrer[0]: ");
-        //console.log(Fahrer[0]);
- 
+       
 
 store.getAllEventRider(e_id, function(err, rider){
     if (err){
         callback("Error");
     }
     else {
-        //console.log("rider");
-        //console.log(rider);
+        //Speicher die entsprechenden Werte des Mitfahrers aus der Collection Mitfahrer in die Variable Mitfahrer
         rider.forEach(function(itemrider){
             Mitfahrer.push({
                 Mitfahrer_id: itemrider.p_id,
@@ -87,25 +83,18 @@ store.getAllEventRider(e_id, function(err, rider){
                 Fahrer: []
             });
         });
-        /*
-        console.log("MitFahrerarray");
-        console.log(Mitfahrer);
-        Mitfahrer[0].Fahrer.push({Fahrer_id:"test"});
-        console.log("MitFahrer[0]: ");
-        console.log(Mitfahrer[0]);
-        console.log("MitfaherermitArray");
-        console.log(Mitfahrer);*/
     }
 });
 };
 
+    //Berechne für jeden Mitfahrer die Distanz zu jedem Fahrer...
 function distanzen(){
+    //(Die Koordinaten des Mitfahrers und der Fahrer werden für die Google-Distance-Abfrage angepasst.)
 Mitfahrer.forEach(function(itemMitfahrer){
     var Ursprung = itemMitfahrer.latitude + ","+ itemMitfahrer.longitude;
-    //console.log(Ursprung);
     Fahrer.forEach(function(itemFahrer){
         var Ziel = itemFahrer.latitude + "," + itemFahrer.longitude;
-        
+        //(Google-Distance-Abfrage)
         distance.get(
             {
                 origin: Ursprung, 
@@ -113,17 +102,14 @@ Mitfahrer.forEach(function(itemMitfahrer){
             },
             function(err, data){
                 if (err) {
-                    return console.log("Error von Distacne: "+ err)
+                    return err;
                 }
                 else {
-                    //console.log("Data von Google: ");
-                    //console.log(data);
+                    //Speicher in dem Array Fahrer der Variable Mitfahrer [itemMitfahrer.Fahrer] alle Fahrer und die entsprechende zeitliche Entfernung
                     itemMitfahrer.Fahrer.push({
                         Fahrer_id: itemFahrer.Fahrer_id,
                         Entfernung: data.durationValue
                     });
-                    console.log("itemMitfahrer.Fahrer:s");
-                    console.log(itemMitfahrer.Fahrer);
                 }
             });
 
@@ -132,35 +118,33 @@ Mitfahrer.forEach(function(itemMitfahrer){
 };
 
 function ersterssortieren(){
-Mitfahrer.forEach(function (itemMitfahrer) {  //Die Entfernungen des Mitfahrers zu den Fahreren werden von klein nach gro� sortiert.
-itemMitfahrer.Fahrer.sort(function(a,b) {
-        return a.Entfernung - b.Entfernung;   
-});
-itemMitfahrer.minEntfernung = itemMitfahrer.Fahrer[0].Entfernung; //Die minimalste Entfernung wird zur weiteren Verarbeitung seperat gespeichert.
-console.log("itemMitfahrer");
-console.log(itemMitfahrer);
-});
-
-Mitfahrer.sort(function(a,b) {  //Die Mitfahrer werden anhand ihrer minimalesten Entfernung zum n�chsten Fahrer von klein nach gro� sortiert.
-     return a.minEntfernung - b.minEntfernung;
-
+    //Die Entfernungen (in dem Array Fahrer der Variable Mitfahrer [itemMitfahrer.Fahrer]) des Mitfahrers zu den Fahreren werden von klein nach gross sortiert.
+Mitfahrer.forEach(function (itemMitfahrer) {  
+    itemMitfahrer.Fahrer.sort(function(a,b) {
+            return a.Entfernung - b.Entfernung;   
+    });
+    //Die minimalste Entfernung wird zur weiteren Verarbeitung seperat gespeichert.
+    itemMitfahrer.minEntfernung = itemMitfahrer.Fahrer[0].Entfernung; 
+    });
+    //Die Mitfahrer der Variable Mitfahrer werden anhand ihrer minimalesten Entfernung zum naechsten Fahrer von klein nach gross sortiert.
+    Mitfahrer.sort(function(a,b) {  
+         return a.minEntfernung - b.minEntfernung;
 });
 };
     
 function zweitessortiern(){
-Mitfahrer.forEach(function (itemM) {
-    itemM.Fahrer.some(function (itemMF) {
-        var Fahrer_id = itemMF.Fahrer_id
-        console.log("itemMF.Fahrer_id"+Fahrer_id);
-        Fahrer.some(function (itemF) {
-            console.log("Fahrer.FAhrer_id"+itemF.Fahrer_id);
-            if( (Fahrer_id == itemF.Fahrer_id) && (itemF.FreiePlaetze > 0) )
+    //Jeder Mitfahrer der Variable Mitfahrer [itemMitfahrer] wird dem Fahrer mit der jeweils geringsten Entfernung zugewiesen...
+Mitfahrer.forEach(function (itemMitfahrer) {
+    //(Dafür werden die Fahrer des Arrays Fahrer aus der Variable Mitfahrer[itemMitfahrerFahrer] durchgegangen)
+    itemMitfahrer.Fahrer.some(function (itemMitfahrerFahrer) {
+        var Fahrer_id = itemMitfahrerFahrer.Fahrer_id
+        Fahrer.some(function (itemFahrer) {
+            //...wenn der Fahrer noch freie Plätze hat, sonst wird der naeste Fahrer gewählt  (Bei Erfolgreicher Zuweisung werden die beiden some-Schleife jeweils vorzeitg beendet)
+            if( (Fahrer_id == itemFahrer.Fahrer_id) && (itemFahrer.FreiePlaetze > 0) )
             {
-                itemF.Mitfahrer.push(itemM.Mitfahrer_id);
-                //console.log("Mitfahrer_ID"+itemM.Mitfahrer_id);
-                console.log("ERfolgreiche Zuweisung");
-                itemF.FreiePlaetze -=1;
-                console.log("FreiePlatze: " +  itemF.FreiePlaetze);
+                //Der Mitfahrer werden in dem Array Mitfahrer der Variable Fahrer [itemFahrer.Mitfahrer] gespeichert und die Anzahl der freien Sitzplaezte verringert.
+                itemFahrer.Mitfahrer.push(itemMitfahrer.Mitfahrer_id);
+                itemFahrer.FreiePlaetze -=1;
                 return true;
             }
             else 
@@ -175,58 +159,40 @@ Mitfahrer.forEach(function (itemM) {
 };
 
 function SpeichernDB(){
+    //Speicher für jeden Fahrer aus der Variable Fahrer...
 Fahrer.forEach(function (itemFahrer) {
+    //...und jeden seiner Mitfahrer [itemFahrerMitfahrer]...
     itemFahrer.Mitfahrer.forEach(function (itemFahrerMitfahrer) {
+        //... in der Collection Auto die Fahrer_id, die Mitfahrer_id und die Event_id. 
         store.saveAuto(itemFahrer.Fahrer_id,itemFahrerMitfahrer, e_id, function(err, callback){
-            
-    console.log("Was wurde gesendet?");
-    console.log(itemFahrer.Fahrer_id + itemFahrerMitfahrer + e_id);
-    if (err){
-        console.log("Abspeichern nicht erfolgreich");
-        console.log(err);
-}else{
-     console.log("Abspeichern erfolgreich");
-}});
-});
+            if (err){
+                err;
+            } else { 
+                callback;
+            }
+        });
+    });
 });
 };
-    
-function endausgabe(){
+ /* Gibt die beiden Variablen Mitfahrer und Fahrer aus (nur für Tests)  
+function ausgabe(){
     console.log("________________________________________________________________________");
     console.log("Mitfahrer");
     console.log(Mitfahrer);
     console.log("Fahrer");
     console.log(Fahrer);
-};
+};*/
+
+//Da die Funktionen in der festgelegten Reihenfolge ablaufen müssen wurden setTimeouts benutzt    
 getEvent_iD();
 setTimeout(ersteDBAbfrage, 500);    
 setTimeout(distanzen, 1000);
 setTimeout(ersterssortieren,2000);
 setTimeout(zweitessortiern,3000);
 setTimeout(SpeichernDB,4000);    
-setTimeout(endausgabe, 5000);
+//setTimeout(ausgabe, 5000);
 
 
 }};
 
 module.exports = fill;
-
-
-
-
-        
-
-/*
- var Mitfahrer = [{
-        Mitfahrer_id:'',
-        longitude: '',
-        latitude:  '',
-        minEntfernung: '',
-        fahrer: [{Fahrer_id:'', Entfernung: ''}]
-    }];
-            
-    var Fahrer = [{
-        Fahrer_id: '',
-        longitude: '',
-        latitude:  '',
-        mitfahrer: [{Mitfahrer_id: ''}]*/
