@@ -190,7 +190,7 @@ setTimeout(distanzen, 1000);
 setTimeout(ersterssortieren,2000);
 setTimeout(zweitessortiern,3000);
 setTimeout(SpeichernDB,4000);    
-//setTimeout(ausgabe, 5000);
+setTimeout(ausgabe, 5000);
 
 
 }};
